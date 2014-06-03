@@ -1,0 +1,7 @@
+core cortex-m4
+mapping generic
+linker bare
+
+device kernel cpu_khz=168000 bus_khz=168000
+
+
