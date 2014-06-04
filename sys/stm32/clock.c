@@ -4,7 +4,7 @@
  * specifies the terms and conditions for redistribution.
  */
 #include "param.h"
-#include "machine/pic32mx.h"
+#include "machine/stm32f4xx.h"
 
 /*
  * Setup core timer for `hz' timer interrupts per second.
@@ -12,10 +12,9 @@
 void
 clkstart()
 {
-	unsigned count = mips_read_c0_register (C0_COUNT, 0);
-
-	mips_write_c0_register (C0_COMPARE, 0,
-                count + (CPU_KHZ * 1000 / HZ + 1) / 2);
-
-	IECSET(0) = 1 << PIC32_IRQ_CT;
+	/* get current clock speed */
+    RCC_ClocksTypeDef RCC_Clocks;
+    RCC_GetClocksFreq(&RCC_Clocks);
+    /* Clock tick every 5 ms */
+    SysTick_Config(RCC_Clocks.HCLK_Frequency / HZ);
 }
