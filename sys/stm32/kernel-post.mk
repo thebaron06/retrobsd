@@ -6,7 +6,7 @@ ASFLAGS		= -I. -I$(H) $(DEFS) $(DEPFLAGS)
 include $(BUILDPATH)/gcc-config.mk
 
 CC		= $(GCCPREFIX)gcc -g -gdwarf-2
-CC		+= -nostdinc -fno-builtin -Werror -Wall -fno-dwarf2-cfi-asm -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -D__FPU_USED=1 -O0
+CC		+= -fno-builtin -Werror -Wall -fno-dwarf2-cfi-asm -mthumb -mcpu=cortex-m4 -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -DUSE_STDPERIPH_DRIVER -O0 -Imachine
 LDFLAGS         += -nostdlib -T $(LDSCRIPT) -Wl,-Map=unix.map
 SIZE		= $(GCCPREFIX)size
 OBJDUMP		= $(GCCPREFIX)objdump
@@ -14,7 +14,9 @@ OBJCOPY		= $(GCCPREFIX)objcopy
 PROGTOOL        = $(AVRDUDE) -c stk500v2 -p pic32 -b 115200
 BLLDFLAGS       = -nostdlib -T$(BUILDPATH)/cfg/boot.ld -Wl,-Map=usbboot.map
 BLCC            = $(CC) #$(GCCPREFIX)gcc -g -Werror -Wall -fno-dwarf2-cfi-asm
-BLCFLAGS        = -Os -I. -I$(H) $(DEFS) $(DEPFLAGS) -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -D__FPU_USED=1 -g -gdwarf-2
+BLCFLAGS        = -Os -I. -Imachine -I$(H) $(DEFS) $(DEPFLAGS) -mthumb -mcpu=cortex-m4 -mfloat-abi=softfp -mfpu=fpv4-sp-d16 -g -gdwarf-2 -DUSE_STDPERIPH_DRIVER
+
+# -mfloat-abi=hard # removed
 
 DEFS            += -DCONFIG=$(CONFIG)
 
